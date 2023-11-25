@@ -4,6 +4,7 @@ const config = require('./config/global');
 const bodyParser = require('body-parser');
 const multipart = require('connect-multiparty');
 const cors = require('cors');
+const generarPDF = require('./controllers/reporteControlador');
 
 const app = express();
 
@@ -29,7 +30,14 @@ app.use('/api/productos', multiPartMiddelware,require('./routes/producto'));
 app.use('/api/login', require('./routes/usuario'));
 app.use('/api/create-user', require('./routes/usuario'));
 
-
+app.get('/generarReporte', async (req, res) => {
+    try {
+        await generarPDF();
+        res.send('PDF generado con éxito');
+    } catch (error) {
+        res.status(500).send('Hubo un error al generar el PDF');
+    }
+});
 
 app.listen(config.port, () => {
     console.log('El servidor por el puerto 4000')
